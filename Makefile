@@ -30,4 +30,4 @@ clean:
 	@rm -rf build
 	@rm -rf components
 
-.PHONY: test lib-cov test-cov clean
+.PHONY: build test lib-cov test-cov clean
