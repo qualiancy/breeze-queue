@@ -1,0 +1,15 @@
+{
+    "name": "breeze-queue"
+  , "repo": "qualiancy/breeze-queue"
+  , "version": "0.0.0"
+  , "description": "Throttled parallel function invocation."
+  , "license": "MIT"
+  , "keywords": [
+    ]
+  , "main": "lib/queue.js"
+  , "scripts": [
+        "lib/queue.js"
+    ]
+  , "dependencies": {}
+  , "development": {}
+}
