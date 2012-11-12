@@ -18,9 +18,11 @@
       "test": "make test"
     }
   , "dependencies": {
+        "breeze-nexttick": "*"
     }
   , "devDependencies": {
         "chai": "*"
+      , "chai-spies": "*"
       , "component": "*"
       , "mocha": "*"
       , "mocha-phantomjs": "*"

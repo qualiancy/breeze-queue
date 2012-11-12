@@ -10,6 +10,8 @@
   , "scripts": [
         "lib/queue.js"
     ]
-  , "dependencies": {}
+  , "dependencies": {
+        "qualiancy/breeze-nexttick": "*"
+    }
   , "development": {}
 }
