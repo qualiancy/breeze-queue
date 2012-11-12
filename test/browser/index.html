@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
     <script src="../../node_modules/mocha/mocha.js"></script>
     <script src="../../node_modules/chai/chai.js"></script>
+    <script src="../../node_modules/chai-spies/chai-spies.js"></script>
     <script>
       mocha.setup('bdd')
       var should = chai.should();
@@ -14,7 +15,7 @@
     <script>
       queue = require('breeze-queue');
     </script>
-    <!-- <script src="../test.js"></script> -->
+    <script src="../queue.js"></script>
     <script>onload = function () {
       if (window.mochaPhantomJS) mochaPhantomJS.run()
       else mocha.run();
