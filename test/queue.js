@@ -197,4 +197,38 @@ describe('queue', function () {
       done();
     }, 100);
   });
+
+  it.only('should allow for queue processing to be paused', function (done) {
+    var count = 0;
+    var iterator = chai.spy(function (req, next) {
+      setTimeout(function () {
+        count++;
+        if (count === 2) q.pause();
+        next(null);
+      }, 10);
+    });
+
+    var drainSpy = chai.spy(function () {
+      q.drain = null;
+      q.resume();
+    });
+
+    var q = queue(iterator, 2);
+    q.drain = drainSpy;
+
+    q.push([
+        { hello: 'universe' }
+      , { hello: 'universe' }
+      , { hello: 'universe' }
+      , { hello: 'universe' }
+      , { hello: 'universe' }
+      , { hello: 'universe' }
+    ], true);
+
+    setTimeout(function () {
+      iterator.should.have.been.called(6);
+      drainSpy.should.have.been.called.once;
+      done();
+    }, 100);
+  });
 });
