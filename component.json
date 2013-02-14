@@ -12,6 +12,7 @@
     ]
   , "dependencies": {
         "qualiancy/breeze-nexttick": "*"
+      , "qualiancy/tea-type": "*"
     }
   , "development": {}
 }
