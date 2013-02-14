@@ -16,7 +16,7 @@ global.chai.use(require('chai-spies'));
  * Import project
  */
 
-global.queue = require('../..');
+global.Queue = require('../..');
 
 /*!
  * Helper to load internals for cov unit tests

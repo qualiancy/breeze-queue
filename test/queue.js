@@ -21,7 +21,7 @@ describe('queue', function () {
 
     var onerror = chai.spy();
 
-    var q = queue(iterator, 2);
+    var q = new Queue(iterator, 2);
     q.onerror = onerror;
 
     q.push([
@@ -37,9 +37,9 @@ describe('queue', function () {
     ], spy2);
 
     setTimeout(function () {
-      iterator.should.have.been.called.exactly(6);
-      spy1.should.have.been.called.exactly(3);
-      spy2.should.have.been.called.exactly(3);
+      iterator.should.have.been.called(6);
+      spy1.should.have.been.called(3);
+      spy2.should.have.been.called(3);
       onerror.should.have.not.been.called();
       done();
     }, 100);
@@ -64,7 +64,7 @@ describe('queue', function () {
 
     var onerror = chai.spy();
 
-    var q= queue(iterator, 2);
+    var q = new Queue(iterator, 2);
     q.onerror = onerror;
 
     q.push([
@@ -80,15 +80,15 @@ describe('queue', function () {
     ], spy2);
 
     setTimeout(function () {
-      iterator.should.have.been.called.exactly(6);
-      spy2.should.have.been.called.exactly(3);
+      iterator.should.have.been.called(6);
+      spy2.should.have.been.called(3);
       onerror.should.have.not.been.called();
       done();
     }, 100);
   });
 
   it('will execute a proper functions', function (done) {
-    var iterator = chai.spy(function (req, next) {
+    var iterator = chai.spy('iterator', function (req, next) {
       q.workers.should.be.below(3);
       req.should.deep.equal({ hello: 'universe' });
       next.should.be.a('function');
@@ -107,18 +107,21 @@ describe('queue', function () {
       res.should.equal('world');
     });
 
+    var q = new Queue(iterator, 2);
+
     var onerror = chai.spy()
       , drain = chai.spy(function () {
-          iterator.should.have.been.called.exactly(6);
+          q.workers.should.equal(0);
+          q.should.have.lengthOf(0);
         })
       , empty = chai.spy(function () {
-          iterator.should.have.been.called.exactly(5);
+          q.workers.should.be.above(0).and.below(3);
+          q.should.have.lengthOf(0);
         })
       , saturated = chai.spy(function () {
-          q.should.have.length(2);
+          q.should.have.lengthOf(2);
         });
 
-    var q= queue(iterator, 2);
     q.onerror = onerror;
     q.drain = drain;
     q.empty = empty;
@@ -137,9 +140,9 @@ describe('queue', function () {
     ], spy2, true);
 
     setTimeout(function () {
-      iterator.should.have.been.called.exactly(6);
-      spy1.should.have.been.called.exactly(3);
-      spy2.should.have.been.called.exactly(3);
+      iterator.should.have.been.called(6);
+      spy1.should.have.been.called(3);
+      spy2.should.have.been.called(3);
       onerror.should.have.not.been.called();
       drain.should.have.been.called.once;
       empty.should.have.been.called.once;
@@ -161,20 +164,15 @@ describe('queue', function () {
       }, 10);
     });
 
-    var spy1 = chai.spy(function (err, res) {
-      should.not.exist(err);
-      res.should.equal('world');
-    });
+    var spy1 = chai.spy();
 
-    var spy2 = chai.spy(function (err, res) {
-      err.should.equal('err');
-    });
+    var spy2 = chai.spy();
 
     var onerror = chai.spy(function (err) {
       err.should.equal('err');
     });
 
-    var q = queue(iterator, 2);
+    var q = new Queue(iterator, 2);
     q.onerror = onerror;
 
     q.push([
@@ -190,15 +188,19 @@ describe('queue', function () {
     ], spy2, true);
 
     setTimeout(function () {
-      iterator.should.have.been.called.exactly(5);
-      spy1.should.have.been.called.exactly(3);
-      spy2.should.have.been.called.exactly(1); // we don't call the rest of the callbacks
+      iterator.should.have.been.called.below(6);
+      spy1.should
+        .have.been.called(3)
+        .always.with.exactly(null, 'world');
+      spy2.should
+        .have.been.called
+        .with.exactly('err');
       onerror.should.have.been.called.once;
       done();
     }, 100);
   });
 
-  it.only('should allow for queue processing to be paused', function (done) {
+  it('should allow for queue processing to be paused', function (done) {
     var count = 0;
     var iterator = chai.spy(function (req, next) {
       setTimeout(function () {
@@ -213,7 +215,7 @@ describe('queue', function () {
       q.resume();
     });
 
-    var q = queue(iterator, 2);
+    var q = new Queue(iterator, 2);
     q.drain = drainSpy;
 
     q.push([
