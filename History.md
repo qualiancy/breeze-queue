@@ -1,4 +1,10 @@
 
+0.4.0 / 2013-02-15 
+==================
+
+  * test: [drain] emit drain in nexttick
+  * queue: [pause] emit drain in nexttick
+
 0.3.0 / 2013-02-14 
 ==================
 
