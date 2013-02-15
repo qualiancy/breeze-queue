@@ -233,4 +233,27 @@ describe('queue', function () {
       done();
     }, 100);
   });
+
+  it('should emit drain immediately if paused when no workers', function (done) {
+    var iterator = chai.spy('iterator', function (req, next) {
+      setTimeout(function () {
+        next(null);
+      }, 10);
+    });
+
+    var drainSpy = chai.spy('drain');
+
+    var q = new Queue(iterator, 2);
+    q.drain = drainSpy;
+
+    setTimeout(function () {
+      q.pause();
+    }, 10);
+
+    setTimeout(function () {
+      iterator.should.not.have.been.called;
+      drainSpy.should.have.been.called.once;
+      done();
+    }, 100);
+  });
 });
